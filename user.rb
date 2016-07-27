@@ -1,7 +1,9 @@
 require_relative 'questions_database'
+require_relative 'model_base'
 
-class User
+class User < ModelBase
   attr_accessor :fname, :lname
+  attr_reader :id
 
   def initialize(options)
     @id = options['id']
@@ -66,27 +68,27 @@ class User
     Reply.find_by_user_id(@id)
   end
 
-  def save
-    if @id.nil?
-      QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname)
-        INSERT INTO
-          users (fname, lname)
-        VALUES
-          (?, ?)
-      SQL
-      @id = QuestionsDatabase.instance.last_insert_row_id
-    else
-      #update
-      QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname, @id)
-        UPDATE
-          users
-        SET
-          fname = ?, lname = ?
-        WHERE
-          id = ?
-      SQL
-    end
-
-    self
-  end
+  # def save
+  #   if @id.nil?
+  #     QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname)
+  #       INSERT INTO
+  #         users (fname, lname)
+  #       VALUES
+  #         (?, ?)
+  #     SQL
+  #     @id = QuestionsDatabase.instance.last_insert_row_id
+  #   else
+  #     #update
+  #     QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname, @id)
+  #       UPDATE
+  #         users
+  #       SET
+  #         fname = ?, lname = ?
+  #       WHERE
+  #         id = ?
+  #     SQL
+  #   end
+  #
+  #   self
+  # end
 end
